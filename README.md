@@ -1,3 +1,19 @@
+DROIDS comparative protein dynamics webserver prototype
+
+NOTE: upon download go inside jsmol folder and unzip the following files
+jsme.zip
+j2s.zip
+
+instructions for installing ds.js follows
+
+test on localserver
+
+http://127.0.0.1
+http://localhost
+
+after installing local apache server via LAMP or XAMPP stack
+https://www.alphr.com/set-up-local-web-server/
+
 # D3: Data-Driven Documents
 
 <a href="https://d3js.org"><img src="https://d3js.org/logo.svg" align="left" hspace="10" vspace="6"></a>
