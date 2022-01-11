@@ -1,0 +1,193 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!--
+Design by Babbitt Lab at RIT
+Released for free under a Creative Commons Attribution 2.5 License
+
+Title      : maxDemon
+Version    : 4.0
+Released   : 2022
+Description: webserver template
+
+-->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+    
+
+<script src="http://127.0.0.1/jsmol/JSmol.min.js"></script>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>maxDemon 4.0 webserver</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<link href="maxdemon_page.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="page">
+	<div id="sidebar">
+		<div><img src="images/chalkprotein.jpg" alt="" width="340" height="220" /></div>
+		<!-- end header -->
+		<div id="login">
+			<h2 class="title1">create list of genetic/drug class variants </h2>
+			<div id="people">
+                <input type="text" placeholder="Add new user"> <button>Add protein filename</button>
+			      <ul>
+				    <li> <p>functional copy 1</p> <i class="x"><span>&#10005;</span></i></li>
+				    <li> <p>functional copy 2</p> <i class="x"><span>&#10005;</span></i></li> 
+			      </ul>
+                </input>
+            </div>
+          <div id="pos">
+             <p>Click on the file name to edit</p>
+          </div>
+			
+		</div>
+		<!-- end menu -->
+		
+
+</div>
+	<!-- end sidebar -->
+	<div id="content">
+		<div><img src="images/chalkboard.jpg" alt="" width="740" height="220" /></div>
+		<div class="boxed">
+			<h1 class="title2">maxDemon 4.0 webserver - analyze genetic/drug class variant impacts on conserved dynamics</h1>
+			<p><strong>maxDemon 5.0</strong> is a free software from the Babbitt Lab at the Rochester Institute of Technology <a href="https://people.rit.edu/gabsbi/">Lab Website</a> released under a <a href="http://creativecommons.org/licenses/by/2.5/">Creative Commons Attribution 2.5 License</a>. It is free to use for commercial or personal use. We only ask that you cite us when you publish. For more details see our <a href="https://gbabbitt.github.io/DROIDS-4.0-comparative-protein-dynamics/">GitHub Pages</a><em>  Enjoy :)</em></p>
+			<h3>What does it do?</h3>
+			<p>maxDemon (i.e. Maxwell's Demon) is a Gaussian Process Classifier trained upon the DROIDS data sets that is employed ortholog dynamics to detect where protein motion is functionally conserved over evolutionary time scales.</p>
+		<h3>Try some examples</h3>
+		<h3>-mapping conserved dynamics (dark gray=conserved, light gray=not conserved)</h3>
+		<button onClick="" style="padding: 16px; background-color: darkgreen; color:aliceblue; border-radius: 4px;font-size: 14px">e.g. DNA / TATA binding protein</button>
+		<button onClick="" style="padding: 16px; background-color: darkred; color:aliceblue; border-radius: 4px;font-size: 14px">e.g. SARS-CoV-2 / ACE2 </button>
+		<button onClick="" style="padding: 16px; background-color: darkblue; color:aliceblue; border-radius: 4px;font-size: 14px">e.g. sorafenib / B-Raf kinase </button>
+		</div>
+		
+		<div class="boxed orange">
+			<div class="col-one">
+				<h2 class="title3">Conserved Dynamics Protein Structure</h2>
+				<div id="view1"></div>
+			</div>
+			
+			<div style="clear: both;">&nbsp;</div>
+		</div>
+	</div>
+	<!-- end content -->
+	<div style="clear: both;">&nbsp;</div>
+</div>
+  
+  
+
+
+
+       
+
+</body>
+
+
+<!-- end page -->
+
+<!-- Footer Scripts
+	============================================= -->
+	
+<script>
+Jmol._isAsync = false;
+Jmol.setDocument(0);
+const Info = {
+  width: "100%",
+  height: "100%",
+  use: "HTML5",
+  j2sPath: "http://127.0.0.1/jsmol/j2s/",
+  script: "set antialiasDisplay; set zoomHeight true;",
+  serverURL: "http://127.0.0.1/jsmol/php/jsmol.php",
+  disableJ2SLoadMonitor: true,
+  disableInitialConsole: true
+};
+
+Jmol.getApplet("jmolview1", Info);
+
+Jmol.script(jmolview1, "load /my_examples/1cdw/1cdw_boundREDUCED.pdb");
+
+$("#view1").html(Jmol.getAppletHtml(jmolview1));
+
+</script>
+
+<script>
+$(document).ready(function() {
+  (function() {
+    var people = {
+      init: function() {
+        this.domElements();
+        this.eventH();
+      },
+      domElements: function() {
+        this.$el = $('#people');
+        this.$button = this.$el.find('button');
+        this.$input = this.$el.find('input');
+        this.$ul = this.$el.find('ul');
+        this.$input.focus();
+      },
+      eventH: function() {
+        this.$button.on('click', this.addPerson.bind(this));
+        this.$el.on('click', 'i', this.removePerson);
+        this.$el.on('click', 'li, p', this.editPerson);
+        this.$el.on('blur', 'li', this.exitEditPerson.bind(this));
+        this.$input.on('keyup', this.enterKey.bind(this));
+      },
+      addPerson: function() {
+
+        if (this.$input.val() !== '' && this.$input.val().trim() !== '') { // check if the input is empty
+
+          this.li = '<li><p>' + this.$input.val() + '</p><i class="x"><span>&#10005;</span></i></li>'; //
+          this.$li = $(this.li);
+          this.$li.appendTo(this.$ul);
+
+          this.$input.val('');
+          this.$input.focus();
+        } else {
+          this.$input.val('');
+          this.$input.focus();
+          return;
+        }
+
+      },
+      removePerson: function(e) {
+        var el = e.target.closest('li'),
+          $el = $(el);
+        $el.remove();
+
+      },
+      editPerson: function(e) {
+        var el = e.target,
+          $el = $(el);
+        if ($el.prop("tagName") === 'P') {
+          $el.attr('contentEditable', 'true');
+          $el.focus();
+          $el.parent().css('background', '#E6AF2E');
+        } else {
+          var p = $el.find('p');
+          p.attr('contentEditable', 'true');
+          $el.find('p').focus();
+          $el.css('background', '#E6AF2E');
+        }
+
+      },
+      exitEditPerson: function() {
+      
+        var $el = this.$el.find('li'),
+          $p = $el.find('p');
+        $el.css('background', '#fff');
+        $p.attr('contentEditable', 'false');
+      },
+      enterKey: function(e) {
+        if (e.keyCode == 13) {
+          this.$button.click();
+        }
+      }
+    };
+    people.init();
+  })();
+});	
+	
+	
+</script>
+
+
