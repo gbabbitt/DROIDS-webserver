@@ -161,37 +161,37 @@ function myExample1() {
 	Jmol.script(jmolview2, "rotate");
 	Jmol.script(jmolview2, "background black");
 	Jmol.script(jmolview2, "ribbon ONLY");
+	
 	Jmol.script(jmolview3, "load /my_examples/1cdw/1cdw_boundREDUCED.pdb");
 	Jmol.script(jmolview3, "rotate");
-	Jmol.script(jmolview3, "background black");
+	Jmol.script(jmolview3, "background gray");
+	Jmol.script(jmolview3, "ribbon ONLY");
 	Jmol.script(jmolview3, "select :A");
-	
 	Jmol.script(jmolview3, "{*}.property_KL = load('/my_examples/1cdw/KL.dat')");
-	Jmol.script(jmolview3, "isosurface sasurface map color range -3 3 color blue to red 50 property hydrophobicity");
-	
+	Jmol.script(jmolview3, "isosurface sasurface color range -3 3 colorscheme bwr MAP property_KL");
+	Jmol.script(jmolview3, "color isosurface translucent");
 	Jmol.script(jmolview3, "select :B");
 	Jmol.script(jmolview3, "color orange");
 	Jmol.script(jmolview3, "select :C");
 	Jmol.script(jmolview3, "color orange");
 	Jmol.script(jmolview3, "DATA clear");
 	Jmol.script(jmolview3, "end property_KL");
+	
 	Jmol.script(jmolview4, "load /my_examples/1cdw/1cdw_boundREDUCED.pdb");
 	Jmol.script(jmolview4, "rotate");
-	Jmol.script(jmolview4, "background black");
+	Jmol.script(jmolview4, "background gray");
+	Jmol.script(jmolview4, "ribbon ONLY");
 	Jmol.script(jmolview4, "select :A");
-	
-	Jmol.script(jmolview4, "property_P = load('/my_examples/1cdw/JSMOLmapping_1cdw_boundREDUCED.pdb.txt')");
-	Jmol.script(jmolview4, "set propertyDataField = 4");
-	Jmol.script(jmolview4, "DATA property_P");
-	Jmol.script(jmolview4, "isosurface map property_P");
-	Jmol.script(jmolview4, "isosurface sasurface color absolute 0 1 map property_P");
-	
+	Jmol.script(jmolview4, "{*}.property_P = load('/my_examples/1cdw/P.dat')");
+	Jmol.script(jmolview4, "isosurface sasurface color range 0 1 color red to black 50 MAP property_P");
+	Jmol.script(jmolview3, "color isosurface translucent");
 	Jmol.script(jmolview4, "select :B");
 	Jmol.script(jmolview4, "color orange");
 	Jmol.script(jmolview4, "select :C");
 	Jmol.script(jmolview4, "color orange");
 	Jmol.script(jmolview4, "DATA clear");
 	Jmol.script(jmolview4, "end property_P");
+	
 	Jmol.script(jmolview5, "load /my_examples/1cdw/1cdw_boundREDUCED.pdb");
 	Jmol.script(jmolview5, "rotate");
 	Jmol.script(jmolview5, "background black");
@@ -214,34 +214,33 @@ function myExample2() {
 	Jmol.script(jmolview2, "rotate");
 	Jmol.script(jmolview2, "background black");
 	Jmol.script(jmolview2, "ribbon ONLY");
+	
 	Jmol.script(jmolview3, "load /my_examples/6vw1/6vw1_boundREDUCED.pdb");
 	Jmol.script(jmolview3, "rotate");
-	Jmol.script(jmolview3, "background black");
+	Jmol.script(jmolview3, "background gray");
+	Jmol.script(jmolview3, "ribbon ONLY");
 	Jmol.script(jmolview3, "select 1-596");
-	Jmol.script(jmolview3, "isosurface sasurface");
-	Jmol.script(jmolview3, "property_KL = load('/my_examples/6vw1/JSMOLmapping_6vw1_boundREDUCED.pdb.txt')");
-	Jmol.script(jmolview3, "set propertyDataField = 3");
-	Jmol.script(jmolview3, "DATA property_KL");
-	Jmol.script(jmolview3, "isosurface map property_KL");
-	Jmol.script(jmolview3, "color isosurface @{color('blue' 'red' 50,true)}");
+	Jmol.script(jmolview3, "{*}.property_KL = load('/my_examples/6vw1/KL.dat')");
+	Jmol.script(jmolview3, "isosurface sasurface color range -2 2 colorscheme bwr MAP property_KL");
 	Jmol.script(jmolview3, "color isosurface translucent");
 	Jmol.script(jmolview3, "select 597-789");
 	Jmol.script(jmolview3, "color red");
 	Jmol.script(jmolview3, "DATA clear");
 	Jmol.script(jmolview3, "end property_KL");
+	
 	Jmol.script(jmolview4, "load /my_examples/6vw1/6vw1_boundREDUCED.pdb");
 	Jmol.script(jmolview4, "rotate");
-	Jmol.script(jmolview4, "background black");
+	Jmol.script(jmolview4, "background gray");
+	Jmol.script(jmolview4, "ribbon ONLY");
 	Jmol.script(jmolview4, "select 1-596");
-	Jmol.script(jmolview4, "isosurface sasurface");
-	Jmol.script(jmolview4, "property_P = load('/my_examples/6vw1/JSMOLmapping_6vw1_boundREDUCED.pdb.txt')");
-	Jmol.script(jmolview4, "set propertyDataField = 4");
-	Jmol.script(jmolview4, "DATA property_P");
-	Jmol.script(jmolview4, "isosurface map property_P");
-	Jmol.script(jmolview4, "color isosurface @{color('red' 'white' 50,true)}");
+	Jmol.script(jmolview4, "{*}.property_P = load('/my_examples/6vw1/P.dat')");
+	Jmol.script(jmolview4, "isosurface sasurface color range 0 1 color red to black 50 MAP property_P");
 	Jmol.script(jmolview4, "color isosurface translucent");
 	Jmol.script(jmolview4, "select 597-789");
 	Jmol.script(jmolview4, "color red");
+	Jmol.script(jmolview4, "DATA clear");
+	Jmol.script(jmolview4, "end property_P");
+		
 	Jmol.script(jmolview5, "load /my_examples/6vw1/6vw1_boundREDUCED.pdb");
 	Jmol.script(jmolview5, "rotate");
 	Jmol.script(jmolview5, "background black");
@@ -267,34 +266,35 @@ function myExample3() {
 	Jmol.script(jmolview2, "rotate");
 	Jmol.script(jmolview2, "background black");
 	Jmol.script(jmolview2, "ribbon ONLY");
+	
 	Jmol.script(jmolview3, "load /my_examples/1uwh/1uwh_boundREDUCED.pdb");
 	Jmol.script(jmolview3, "rotate");
-	Jmol.script(jmolview3, "background black");
+	Jmol.script(jmolview3, "background gray");
 	Jmol.script(jmolview3, "select 1-276");
-	Jmol.script(jmolview3, "isosurface sasurface");
-	Jmol.script(jmolview3, "property_KL = load('/my_examples/1uwh/JSMOLmapping_1uwh_boundREDUCED.pdb.txt')");
-	Jmol.script(jmolview3, "set propertyDataField = 3");
-	Jmol.script(jmolview3, "DATA property_KL");
-	Jmol.script(jmolview3, "isosurface map property_KL");
-	Jmol.script(jmolview3, "color isosurface @{color('blue' 'red' 50,true)}");
+	Jmol.script(jmolview3, "ribbon ONLY");
+	Jmol.script(jmolview3, "{*}.property_KL = load('/my_examples/1uwh/KL.dat')");
+	Jmol.script(jmolview3, "isosurface sasurface color range -0.5 0.5 colorscheme bwr MAP property_KL");
 	Jmol.script(jmolview3, "color isosurface translucent");
 	Jmol.script(jmolview3, "select 277");
 	Jmol.script(jmolview3, "color lime");
+	Jmol.script(jmolview3, "spacefill ON");
 	Jmol.script(jmolview3, "DATA clear");
 	Jmol.script(jmolview3, "end property_KL");
+	
 	Jmol.script(jmolview4, "load /my_examples/1uwh/1uwh_boundREDUCED.pdb");
 	Jmol.script(jmolview4, "rotate");
-	Jmol.script(jmolview4, "background black");
+	Jmol.script(jmolview4, "background gray");
 	Jmol.script(jmolview4, "select 1-276");
-	Jmol.script(jmolview4, "isosurface sasurface");
-	Jmol.script(jmolview4, "property_P = load('/my_examples/1uwh/JSMOLmapping_1uwh_boundREDUCED.pdb.txt')");
-	Jmol.script(jmolview4, "set propertyDataField = 4");
-	Jmol.script(jmolview4, "DATA property_P");
-	Jmol.script(jmolview4, "isosurface map property_P");
-	Jmol.script(jmolview4, "color isosurface @{color('red' 'white' 50,true)}");
+	Jmol.script(jmolview4, "ribbon ONLY");
+	Jmol.script(jmolview4, "{*}.property_P = load('/my_examples/1uwh/P.dat')");
+	Jmol.script(jmolview4, "isosurface sasurface color range 0 1 color red to black 50 MAP property_P");
 	Jmol.script(jmolview4, "color isosurface translucent");
 	Jmol.script(jmolview4, "select 277");
 	Jmol.script(jmolview4, "color lime");
+	Jmol.script(jmolview4, "spacefill ON");
+	Jmol.script(jmolview4, "DATA clear");
+	Jmol.script(jmolview4, "end property_P");
+		
 	Jmol.script(jmolview5, "load /my_examples/1uwh/1uwh_boundREDUCED.pdb");
 	Jmol.script(jmolview5, "rotate");
 	Jmol.script(jmolview5, "background black");
