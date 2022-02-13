@@ -1,0 +1,447 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!--
+Design by Babbitt Lab at RIT
+Released for free under a Creative Commons Attribution 2.5 License
+
+Title      : DROIDS
+Version    : 5.0
+Released   : 2022
+Description: webserver template
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<script src = "http://127.0.0.1/dist/d3.min.js"></script>	
+<script src="http://127.0.0.1/jsmol/JSmol.min.js"></script>
+<script src="https://unpkg.com/d3@5.6.0/dist/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+<script>
+import * as d3 from "d3";
+</script>	
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>DROIDS 5.0 webserver</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<link href="default.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="page">
+	<div id="sidebar" style="background-color: black;">
+		<div><img src="images/chalkprotein.jpg" alt="" width="340" height="220" /></div>
+		<!-- end header -->
+		<div id="login">
+			<h2 class="title1">paths to PDB and MD files for Reference Protein</h2>
+			<form id="form1" method="post" action="#">
+				<fieldset>
+				<label for="inputtext1">PDB ID (.pdb):</label>
+				<input id="inputtext1" type="text" name="inputtext1" value="" />
+				<label for="inputtext2">topology (.prmtop):</label>
+				<input id="inputtext2" type="password" name="inputtext2" value="" />
+				<label for="inputtext3">input coordinates (.inpcrd):</label>
+				<input id="inputtext3" type="password" name="inputtext3" value="" />
+				<label for="inputtext4">trajectory (.nc or .mdcrd):</label>
+				<input id="inputtext4" type="password" name="inputtext4" value="" />
+				</fieldset>
+			</form>
+		</div>
+		<!-- end menu -->
+		<div id="login">
+			<h2 class="title1" >paths to PDB and MD files for Query Protein</h2>
+			<form id="form1" method="post" action="#">
+				<fieldset>
+				<label for="inputtext5">PDB ID (.pdb):</label>
+				<input id="inputtext5" type="text" name="inputtext5" value="" />
+				<label for="inputtext6">topology (.prmtop):</label>
+				<input id="inputtext6" type="password" name="inputtext6" value="" />
+				<label for="inputtext7">input coordinates (.inpcrd):</label>
+				<input id="inputtext7" type="password" name="inputtext7" value="" />
+				<label for="inputtext8">trajectory (.nc or .mdcrd):</label>
+				<input id="inputtext8" type="password" name="inputtext8" value="" />
+				<input id="inputsubmit1" type="submit" name="inputsubmit1" value="submit files" />
+				<input id="inputsubmit2" type="submit" name="inputsubmit2" value="analyze files" />
+				<label for="inputtext9">path to ChimeraX bin folder and ChimeraX.exe:</label>
+				<input id="inputtext9" type="password" name="inputtext9" value="" />
+				<input id="inputsubmit3" type="submit" name="inputsubmit3" value="visualize results -ChimeraX" />
+				</fieldset>
+			</form>
+		    <button onClick="document.location.href = 'maxdemon.html'" style="padding: 16px; background-color: darkred; color:white; border-radius: 4px; font-size: 14px;">find conserved dynamics</button>
+		</div>
+	</div>
+	<!-- end sidebar -->
+	<div id="content">
+		<div><img src="images/chalkboard.jpg" alt="" width="740" height="220" /></div>
+		<div class="boxed">
+			<h1 class="title2">DROIDS 5.0 webserver - statistical machine learning for comparative protein dynamics</h1>
+			<p><strong>DROIDS 5.0</strong> is a free software from the Babbitt Lab at the Rochester Institute of Technology <a href="https://people.rit.edu/gabsbi/">Lab Website</a> released under a <a href="http://creativecommons.org/licenses/by/2.5/">Creative Commons Attribution 2.5 License</a>. It is free to use for commercial or personal use. We only ask that you cite us when you publish. For more details see our <a href="https://gbabbitt.github.io/DROIDS-4.0-comparative-protein-dynamics/">GitHub Pages</a><em>  Enjoy :)</em></p>
+			<h3>What does it do?</h3>
+			<p>DROIDS software samples atom fluctuations and correlations from your MD runs to build feature vectors for machine learning at every amino acid site. It then applies Gaussian kernel process machine learning and reproducing kernel Hilbert space to define the maximum mean discrepancy (i.e. feature distance) between the molecular dynamics of the comparative functional states of your reference and query (e.g. bound vs. unbound protein, mutated vs. wildtype protein etc.). A two sample statistical test corrected for false discovery rate is employed to identify where the dynamics of these protein functional states differ. The results can be mapped to protein structure in UCSF ChimeraX. </p>
+		<h3>Load some pre-calculated examples</h3>
+		<h3></h3>
+		  <button onClick="myExample1()" style="padding: 16px; background-color: darkgreen; color:aliceblue; border-radius: 4px;font-size: 14px">e.g. DNA / TATA binding protein</button>
+		  <button onClick="myExample2()" style="padding: 16px; background-color: darkred; color:aliceblue; border-radius: 4px;font-size: 14px">e.g. SARS-CoV-2 / ACE2 </button>
+		  <button onClick="myExample3()" style="padding: 16px; background-color: darkblue; color:aliceblue; border-radius: 4px;font-size: 14px">e.g. sorafenib / B-Raf kinase </button>
+		<h3></h3>
+		</div>
+		<div class="boxed orange">
+			<div class="col-one">
+				<h2 class="title3">Query Protein Structure</h2>
+					<div id="view1"></div>
+				</div>
+			<div class="col-two">
+				<h2 class="title3">Reference Protein Structure</h2>
+				<div id="view2"></div>
+			</div>
+			<div style="clear: both;">&nbsp;</div>
+		</div>
+		<h3>-mapping KL divergence/significance in dynamics </h3>
+		<div class="boxed orange">
+			<div class="col-one">
+				<h2 class="title3">KL (blue=dampened, red=amplified)</h2>
+				<div id="view3"></div>
+			</div>
+			<div class="col-two">
+				<h2 class="title3">P value significance (black=ns, red=signif)</h2>
+				<div id="view4"></div>
+			</div>
+			<div style="clear: both;">&nbsp;</div>
+			</div>
+		<h3>-site-wise divergence/significance to changes in dynamics </h3>
+		 
+		 
+		    <div id= DifferenceChart>CHART</div>
+		
+		
+		<h3>-mapping max mean discrepancy/significance in learned features</h3>
+		<div class="boxed orange">
+			<div class="col-one">
+				<h2 class="title3">MMD (blue=dampened, red=amplified)</h2>
+				<div id="view5"></div>
+			</div>
+			<div class="col-two">
+				<h2 class="title3">P value significance (black=ns, red=signif)</h2>
+				<div id="view6"></div>
+			</div>
+			<div style="clear: both;">&nbsp;</div>
+			</div>
+		
+		
+		<div></div>
+		<div></div>		
+				
+</div>
+	</div>
+</body>
+ <!-- end content -->
+<!-- end page -->
+
+<!-- Footer Scripts
+	=============================================
+	JSmol panels
+	-->
+	
+<script>
+Jmol._isAsync = false;
+Jmol.setDocument(0);
+const Info = {
+  width: "100%",
+  height: "100%",
+  use: "HTML5",
+  j2sPath: "http://127.0.0.1/jsmol/j2s/",
+  script: "set antialiasDisplay; set zoomHeight true;",
+  serverURL: "http://127.0.0.1/jsmol/php/jsmol.php",
+  disableJ2SLoadMonitor: true,
+  disableInitialConsole: true
+};
+
+Jmol.getApplet("jmolview1", Info);
+Jmol.getApplet("jmolview2", Info);
+Jmol.getApplet("jmolview3", Info);
+Jmol.getApplet("jmolview4", Info);
+Jmol.getApplet("jmolview5", Info);
+Jmol.getApplet("jmolview6", Info);
+
+function myExample1() {
+  Jmol.script(jmolview1, "load /my_examples/1cdw/1cdw_boundREDUCED.pdb");
+	Jmol.script(jmolview1, "rotate");
+	Jmol.script(jmolview1, "background black");
+	Jmol.script(jmolview1, "ribbon ONLY");
+	Jmol.script(jmolview2, "load /my_examples/1cdw/1cdw_unboundREDUCED.pdb");
+	Jmol.script(jmolview2, "rotate");
+	Jmol.script(jmolview2, "background black");
+	Jmol.script(jmolview2, "ribbon ONLY");
+	
+	Jmol.script(jmolview3, "load /my_examples/1cdw/1cdw_boundREDUCED.pdb");
+	Jmol.script(jmolview3, "rotate");
+	Jmol.script(jmolview3, "background gray");
+	Jmol.script(jmolview3, "ribbon ONLY");
+	Jmol.script(jmolview3, "select :A");
+	Jmol.script(jmolview3, "{*}.property_KL = load('/my_examples/1cdw/KL.dat')");
+	Jmol.script(jmolview3, "isosurface sasurface color range -3 3 colorscheme bwr MAP property_KL");
+	Jmol.script(jmolview3, "color isosurface translucent");
+	Jmol.script(jmolview3, "select :B");
+	Jmol.script(jmolview3, "color orange");
+	Jmol.script(jmolview3, "select :C");
+	Jmol.script(jmolview3, "color orange");
+	Jmol.script(jmolview3, "DATA clear");
+	Jmol.script(jmolview3, "end property_KL");
+	
+	Jmol.script(jmolview4, "load /my_examples/1cdw/1cdw_boundREDUCED.pdb");
+	Jmol.script(jmolview4, "rotate");
+	Jmol.script(jmolview4, "background gray");
+	Jmol.script(jmolview4, "ribbon ONLY");
+	Jmol.script(jmolview4, "select :A");
+	Jmol.script(jmolview4, "{*}.property_P = load('/my_examples/1cdw/P.dat')");
+	Jmol.script(jmolview4, "isosurface sasurface color range 0 1 color red to black 50 MAP property_P");
+	Jmol.script(jmolview4, "color isosurface translucent");
+	Jmol.script(jmolview4, "select :B");
+	Jmol.script(jmolview4, "color orange");
+	Jmol.script(jmolview4, "select :C");
+	Jmol.script(jmolview4, "color orange");
+	Jmol.script(jmolview4, "DATA clear");
+	Jmol.script(jmolview4, "end property_P");
+	
+	Jmol.script(jmolview5, "load /my_examples/1cdw/1cdw_boundREDUCED.pdb");
+	Jmol.script(jmolview5, "rotate");
+	Jmol.script(jmolview5, "background black");
+	Jmol.script(jmolview5, "dots ONLY");
+	Jmol.script(jmolview5, "color dots white");
+	Jmol.script(jmolview6, "load /my_examples/1cdw/1cdw_boundREDUCED.pdb");
+	Jmol.script(jmolview6, "rotate");
+	Jmol.script(jmolview6, "background black");
+	Jmol.script(jmolview6, "dots ONLY");
+	Jmol.script(jmolview6, "color dots white");
+}
+function myExample2() {
+  Jmol.script(jmolview1, "load /my_examples/6vw1/6vw1_boundREDUCED.pdb");
+	Jmol.script(jmolview1, "rotate");
+	Jmol.script(jmolview1, "background black");
+	Jmol.script(jmolview1, "ribbon ONLY");
+	Jmol.script(jmolview1, "select 597-789");
+	Jmol.script(jmolview1, "color red");
+  Jmol.script(jmolview2, "load /my_examples/6vw1/6vw1_unboundREDUCED.pdb");
+	Jmol.script(jmolview2, "rotate");
+	Jmol.script(jmolview2, "background black");
+	Jmol.script(jmolview2, "ribbon ONLY");
+	
+	Jmol.script(jmolview3, "load /my_examples/6vw1/6vw1_boundREDUCED.pdb");
+	Jmol.script(jmolview3, "rotate");
+	Jmol.script(jmolview3, "background gray");
+	Jmol.script(jmolview3, "ribbon ONLY");
+	Jmol.script(jmolview3, "select 1-596");
+	Jmol.script(jmolview3, "{*}.property_KL = load('/my_examples/6vw1/KL.dat')");
+	Jmol.script(jmolview3, "isosurface sasurface color range -2 2 colorscheme bwr MAP property_KL");
+	Jmol.script(jmolview3, "color isosurface translucent");
+	Jmol.script(jmolview3, "select 597-789");
+	Jmol.script(jmolview3, "color red");
+	Jmol.script(jmolview3, "DATA clear");
+	Jmol.script(jmolview3, "end property_KL");
+	
+	Jmol.script(jmolview4, "load /my_examples/6vw1/6vw1_boundREDUCED.pdb");
+	Jmol.script(jmolview4, "rotate");
+	Jmol.script(jmolview4, "background gray");
+	Jmol.script(jmolview4, "ribbon ONLY");
+	Jmol.script(jmolview4, "select 1-596");
+	Jmol.script(jmolview4, "{*}.property_P = load('/my_examples/6vw1/P.dat')");
+	Jmol.script(jmolview4, "isosurface sasurface color range 0 1 color red to black 50 MAP property_P");
+	Jmol.script(jmolview4, "color isosurface translucent");
+	Jmol.script(jmolview4, "select 597-789");
+	Jmol.script(jmolview4, "color red");
+	Jmol.script(jmolview4, "DATA clear");
+	Jmol.script(jmolview4, "end property_P");
+		
+	Jmol.script(jmolview5, "load /my_examples/6vw1/6vw1_boundREDUCED.pdb");
+	Jmol.script(jmolview5, "rotate");
+	Jmol.script(jmolview5, "background black");
+	Jmol.script(jmolview5, "dots ONLY");
+	Jmol.script(jmolview5, "color dots white");
+	Jmol.script(jmolview6, "load /my_examples/6vw1/6vw1_boundREDUCED.pdb");
+	Jmol.script(jmolview6, "rotate");
+	Jmol.script(jmolview6, "background black");
+	Jmol.script(jmolview6, "dots ONLY");
+	Jmol.script(jmolview6, "color dots white");
+}
+function myExample3() {
+  Jmol.script(jmolview1, "load /my_examples/1uwh/1uwh_boundREDUCED.pdb");
+	Jmol.script(jmolview1, "rotate");
+	Jmol.script(jmolview1, "background black");
+	Jmol.script(jmolview1, "delete HOH");
+	Jmol.script(jmolview1, "select 1-276");
+	Jmol.script(jmolview1, "ribbon ONLY");
+	Jmol.script(jmolview1, "select 277");
+	Jmol.script(jmolview1, "color lime");
+	Jmol.script(jmolview1, "spacefill ON");
+	Jmol.script(jmolview2, "load /my_examples/1uwh/1uwh_unboundREDUCED.pdb");
+	Jmol.script(jmolview2, "rotate");
+	Jmol.script(jmolview2, "background black");
+	Jmol.script(jmolview2, "ribbon ONLY");
+	
+	Jmol.script(jmolview3, "load /my_examples/1uwh/1uwh_boundREDUCED.pdb");
+	Jmol.script(jmolview3, "rotate");
+	Jmol.script(jmolview3, "background gray");
+	Jmol.script(jmolview3, "select 1-276");
+	Jmol.script(jmolview3, "ribbon ONLY");
+	Jmol.script(jmolview3, "{*}.property_KL = load('/my_examples/1uwh/KL.dat')");
+	Jmol.script(jmolview3, "isosurface sasurface color range -0.5 0.5 colorscheme bwr MAP property_KL");
+	Jmol.script(jmolview3, "color isosurface translucent");
+	Jmol.script(jmolview3, "select 277");
+	Jmol.script(jmolview3, "color lime");
+	Jmol.script(jmolview3, "spacefill ON");
+	Jmol.script(jmolview3, "DATA clear");
+	Jmol.script(jmolview3, "end property_KL");
+	
+	Jmol.script(jmolview4, "load /my_examples/1uwh/1uwh_boundREDUCED.pdb");
+	Jmol.script(jmolview4, "rotate");
+	Jmol.script(jmolview4, "background gray");
+	Jmol.script(jmolview4, "select 1-276");
+	Jmol.script(jmolview4, "ribbon ONLY");
+	Jmol.script(jmolview4, "{*}.property_P = load('/my_examples/1uwh/P.dat')");
+	Jmol.script(jmolview4, "isosurface sasurface color range 0 1 color red to black 50 MAP property_P");
+	Jmol.script(jmolview4, "color isosurface translucent");
+	Jmol.script(jmolview4, "select 277");
+	Jmol.script(jmolview4, "color lime");
+	Jmol.script(jmolview4, "spacefill ON");
+	Jmol.script(jmolview4, "DATA clear");
+	Jmol.script(jmolview4, "end property_P");
+		
+	Jmol.script(jmolview5, "load /my_examples/1uwh/1uwh_boundREDUCED.pdb");
+	Jmol.script(jmolview5, "rotate");
+	Jmol.script(jmolview5, "background black");
+	Jmol.script(jmolview5, "dots ONLY");
+	Jmol.script(jmolview5, "color dots white");
+	Jmol.script(jmolview6, "load /my_examples/1uwh/1uwh_boundREDUCED.pdb");
+	Jmol.script(jmolview6, "rotate");
+	Jmol.script(jmolview6, "background black");
+	Jmol.script(jmolview6, "dots ONLY");
+	Jmol.script(jmolview6, "color dots white");
+}
+
+$("#view1").html(Jmol.getAppletHtml(jmolview1));
+$("#view2").html(Jmol.getAppletHtml(jmolview2));
+$("#view3").html(Jmol.getAppletHtml(jmolview3));
+$("#view4").html(Jmol.getAppletHtml(jmolview4));
+$("#view5").html(Jmol.getAppletHtml(jmolview5));
+$("#view6").html(Jmol.getAppletHtml(jmolview6));
+</script>
+
+<!--=============================================
+	D3.js plot -  KL to avg difference transition bar graph
+	-->
+<script>
+
+function DifferenceChart(data, {
+  x = ([x]) => x, // given d in data, returns the (temporal) x-value
+  y1 = () => 0, // given d in data, returns the (quantitative) baseline y-value
+  y2 = ([, y]) => y, // given d in data, returns the (quantitative) y-value
+  defined, // for gaps in data
+  curve = d3.curveLinear, // curve generator for the lines
+  marginTop = 20, // top margin, in pixels
+  marginRight = 30, // right margin, in pixels
+  marginBottom = 30, // bottom margin, in pixels
+  marginLeft = 40, // left margin, in pixels
+  width = 640, // outer width, in pixels
+  height = 400, // outer height, in pixels
+  xType = d3.scaleUtc, // type of x-scale
+  xDomain, // [xmin, xmax]
+  xRange = [marginLeft, width - marginRight], // [left, right]
+  yType = d3.scaleLinear, // type of y-scale
+  yDomain, // [ymin, ymax]
+  yRange = [height - marginBottom, marginTop], // [bottom, top]
+  yFormat, // a format specifier string for the y-axis
+  yLabel, // a label for the y-axis
+  colors = d3.schemePiYG[3], // colors for negative and positive differences
+  stroke = "currentColor", // stroke color of line
+  strokeLinecap = "round", // stroke line cap of the line
+  strokeLinejoin = "round", // stroke line join of the line
+  strokeWidth = 1.5, // stroke width of line, in pixels
+  strokeOpacity = 1, // stroke opacity of line
+} = {}) {
+  // Compute values.
+  const X = d3.map(data, x);
+  const Y1 = d3.map(data, y1);
+  const Y2 = d3.map(data, y2);
+  const I = d3.range(data.length);
+  if (defined === undefined) defined = (d, i) => !isNaN(X[i]) && !isNaN(Y1[i]) && !isNaN(Y2[i]);
+  const D = d3.map(data, defined);
+
+  // Compute default domains.
+  if (xDomain === undefined) xDomain = d3.extent(X);
+  if (yDomain === undefined) yDomain = d3.extent([...Y1, ...Y2]);
+
+  // Construct scales and axes.
+  const xScale = xType(xDomain, xRange);
+  const yScale = yType(yDomain, yRange);
+  const xAxis = d3.axisBottom(xScale).ticks(width / 80).tickSizeOuter(0);
+  const yAxis = d3.axisLeft(yScale).ticks(height / 60, yFormat);
+
+  // A unique identifier for clip paths (to avoid conflicts).
+  const uid = `O-${Math.random().toString(16).slice(2)}`;
+
+  // Helpers for rendering lines and areas.
+  const line = (y) => d3.line().defined(i => D[i]).curve(curve).x(i => xScale(X[i])).y(y)(I);
+  const area = (y0, y1) => d3.area().defined(i => D[i]).curve(curve).x(i => xScale(X[i])).y0(y0).y1(y1)(I);
+
+  const svg = d3.create("svg")
+      .attr("width", width)
+      .attr("height", height)
+      .attr("viewBox", [0, 0, width, height])
+      .attr("style", "max-width: 100%; height: auto; height: intrinsic;");
+
+  svg.append("g")
+      .attr("transform", `translate(${marginLeft},0)`)
+      .call(yAxis)
+      .call(g => g.select(".domain").remove())
+      .call(g => g.selectAll(".tick line").clone()
+          .attr("x2", width - marginLeft - marginRight)
+          .attr("stroke-opacity", 0.1))
+      .call(g => g.append("text")
+          .attr("x", -marginLeft)
+          .attr("y", 10)
+          .attr("fill", "currentColor")
+          .attr("text-anchor", "start")
+          .text(yLabel));
+
+  svg.append("clipPath")
+      .attr("id", `${uid}-above`)
+    .append("path")
+      .attr("d", area(0, i => yScale(Y1[i])));
+
+  svg.append("clipPath")
+      .attr("id", `${uid}-below`)
+    .append("path")
+      .attr("d", area(height, i => yScale(Y1[i])));
+
+  svg.append("path")
+      .attr("clip-path", `url(${new URL(`#${uid}-above`, location)})`)
+      .attr("fill", colors[colors.length - 1])
+      .attr("d", area(height, i => yScale(Y2[i])));
+
+  svg.append("path")
+      .attr("clip-path", `url(${new URL(`#${uid}-below`, location)})`)
+      .attr("fill", colors[0])
+      .attr("d", area(0, i => yScale(Y2[i])));
+
+  svg.append("g")
+      .attr("transform", `translate(0,${height - marginBottom})`)
+      .call(xAxis)
+      .call(g => g.select(".domain").remove());
+
+  svg.append("path")
+      .attr("fill", "none")
+      .attr("stroke", stroke)
+      .attr("stroke-width", strokeWidth)
+      .attr("stroke-linecap", strokeLinecap)
+      .attr("stroke-linejoin", strokeLinejoin)
+      .attr("stroke-opacity", strokeOpacity)
+      .attr("d", line(i => yScale(Y2[i])));
+
+
+
+
+
+
+</script>
+
+
+<!--	=============================================	-->
+
+
